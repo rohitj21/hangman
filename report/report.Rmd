@@ -31,13 +31,13 @@ The guessing player can use strategies based on the frequency of letters in the 
 
 This assumption was made by observing various patterns in English words. For example the letter 'Q' is almost always followed by the letter 'U' and many words end with the letters 'TION'. All the analysis is done using the words in the dictionary provided in the challenge.
 
-![Probability that a random English word contains a given pattern](Patterns.png)
+![Probability that a random English word contains a given pattern](..\Analysis\Patterns.png)
 
 **Note 1 :** Our chances of guessing the word correctly also depend significantly on the number of unique letters in the word ( which depends on word length ). If the length of the word is very small, say 4 or 5, we are very unlikely to guess it correctly because the number of correct letters out of 26 are small and there are very few patterns to observe. But fortunately the such words are few in number (See Figure-2).
 
 **Note 2:** Some letter combinations occur at the end of a word like "NESS" or "ER". In order to exploit this fact I added dummy letters "{" and "\|" at the beginning and end of each word in the dictionary. This allows us to identify such patterns and adjust our prediction accordingly.
 
-![Plot showing the distribution of the length of English word.](WordLength.png)
+![Plot showing the distribution of the length of English word.](..\Analysis\WordLength.png)
 
 Keeping these points in mind I designed an algorithm which predicts the most likely letter in the word.
 
@@ -51,13 +51,13 @@ First, we add the dummy letters { and \| to the input to get **{ \_ I \_ I S \_ 
 
 Second, we break the input into patterns components containing exactly one blank space to get the following patterns.
 
-| Length 1 ( $\Pi_1$ ) | Length 2 ( $\Pi_2$ )    | Length 3 ( $\Pi_3$ )      | Length 4 ( $\Pi_4$ )        |
-|----------------------|-------------------------|---------------------------|-----------------------------|
-| \_ ( $\Pi_{11}$ )    | { \_ ( $\Pi_{21}$ )     | { \_ I ( $\Pi_{31}$ )     | I \_ I S ( $\Pi_{41}$ )     |
-| \_ ( $\Pi_{12}$ )    | I \_ ( $\Pi_{22}$ )     | I \_ I ( $\Pi_{32}$ )     | I S \_ \| ( $\Pi_{42}$ )    |
-| \_ ( $\Pi_{13}$ )    | \_ I ( $\Pi_{23}$ )     | \_ I S ( $\Pi_{33}$ )     |                             |
-|                      | S \_ ( $\Pi_{24}$ )     | I S \_ ( $\Pi_{34}$ )     |                             |
-|                      | \_ \| ( $\Pi_{25}$ )    | S \_ \| ( $\Pi_{35}$ )    |                             |
+| Length 1 ( $\Pi_1$ ) | Length 2 ( $\Pi_2$ ) | Length 3 ( $\Pi_3$ )   | Length 4 ( $\Pi_4$ )     |
+|------------------|------------------|------------------|-------------------|
+| \_ ( $\Pi_{11}$ )    | { \_ ( $\Pi_{21}$ )  | { \_ I ( $\Pi_{31}$ )  | I \_ I S ( $\Pi_{41}$ )  |
+| \_ ( $\Pi_{12}$ )    | I \_ ( $\Pi_{22}$ )  | I \_ I ( $\Pi_{32}$ )  | I S \_ \| ( $\Pi_{42}$ ) |
+| \_ ( $\Pi_{13}$ )    | \_ I ( $\Pi_{23}$ )  | \_ I S ( $\Pi_{33}$ )  |                          |
+|                      | S \_ ( $\Pi_{24}$ )  | I S \_ ( $\Pi_{34}$ )  |                          |
+|                      | \_ \| ( $\Pi_{25}$ ) | S \_ \| ( $\Pi_{35}$ ) |                          |
 
 : Pattern components of the example string
 
@@ -84,7 +84,7 @@ $$
 Here $\mathbb{I}(x)$ is the indicator function which return 1 if $x$ is a true statement otherwise it returns 0.\
 $N(\pi)$ is the number of occurences of the pattern $\pi$ in our word dictionary. Figure 3 shows the the conditional probability distributions for some patterns.
 
-![Examples of Conditional Probability distributions for some patterns](Prob_plot.png)
+![Examples of Conditional Probability distributions for some patterns](..\Analysis\Prob_plot.png)
 
 The score is calculated for each letter in the alphabet and our prediction is the letter with the highest score.
 
@@ -93,7 +93,7 @@ The implementation of this strategy requires the following functions.
 \pagebreak
 
 | Function                     | Description                                                                                                                                                                         |
-|-----------------------|------------------------------------------------|
+|---------------|---------------------------------------------------------|
 | `guess(word)`                | This is the main function which combines the probabilities and returns the most likely letter                                                                                       |
 | `model(word, l)`             | Breaks the word into patterns of length `l` and returns the sum of the probabilities for each letter in the alphabet                                                                |
 | `Conditional_Probability(p)` | This function takes a pattern p as input containing exactly one blank space and calculates the probability mass function of the missing letter given other letters in the pattern p |
@@ -108,7 +108,7 @@ Before submitting the final result testing the algorithm's accuracy was crucial.
 
 Firstly, 1000 words are removed from the dictionary at random for testing and the algorithm is allowed to train on the rest of the words. This process is repeated 1000 times to get the samples. Secondly, on each sample we calculate the accuracy which is denoted by $X_i$ . We can use these samples to calculate the point estimates for $X$ as well as upper one-sided confidence interval. Figure 4 shows the distribution of $X$
 
-![Distribution of accuracy on a set of 1000 games](CV.png)
+![Distribution of accuracy on a set of 1000 games](..\Analysis\CV.png)
 
 \pagebreak
 
@@ -116,7 +116,7 @@ Lastly we use these samples to find where does our algorithm fails. Our initial 
 
 $$Probability(\ Success\  |\ Word \ Length = l\ ) = \frac{\text{number of instances we succeeded on a word of length }l}{\text{number of words of length }l\text{ in our sample}}$$
 
-![Probabilities of successfully guessing the the word of a given length](successrate.png)
+![Probabilities of successfully guessing the the word of a given length](..\Analysis\successrate.png)
 
 # Conclusion
 
